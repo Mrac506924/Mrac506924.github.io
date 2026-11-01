@@ -1,110 +1,169 @@
+
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Bouncing Box</title>
-    <script src="jquery.min.js"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Box Adventure</title>
+
     <style>
-      .box {
-        width: 70px;
-        height: 70px;
-        background-color: teal;
-        font-size: 300%;
-        text-align: center;
-        user-select: none;
-        display: block;
-        position: absolute;
-        top: 100px;
-        /* Change me! */
-        left: 0px;
-      }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #1e293b;
+            color: white;
+            text-align: center;
+        }
 
-      .board {
-        height: 100vh;
-      }
+        h1 {
+            margin-top: 30px;
+            color: #38bdf8;
+        }
+
+        #gameBoard {
+            width: 90%;
+            max-width: 800px;
+            height: 350px;
+            background: white;
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #38bdf8;
+            border-radius: 12px;
+        }
+
+        #box {
+            width: 60px;
+            height: 60px;
+            background: #f97316;
+            position: absolute;
+            top: 145px;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #score {
+            font-size: 24px;
+            color: #4ade80;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: #0284c7;
+            color: white;
+        }
+
+        #instructions {
+            margin: 20px;
+        }
     </style>
-    <!-- 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
-  </head>
+</head>
 
-  <body class="board">
-    <!-- HTML for the box -->
-    <div class="box">?</div>
+<body>
+
+    <h1>🎮 Bouncing Box Adventure</h1>
+
+    <p>Click the box to earn points and increase its speed!</p>
+
+    <div id="score">Score: 0</div>
+
+    <div id="gameBoard">
+        <div id="box">0</div>
+    </div>
+
+    <p id="instructions">
+        Click the orange box to make it faster!
+    </p>
+
+    <button onclick="restartGame()">Restart Game</button>
 
     <script>
-      (function () {
-        "use strict";
-        /* global jQuery */
+        // Get game elements
+        const box = document.getElementById("box");
+        const board = document.getElementById("gameBoard");
+        const scoreDisplay = document.getElementById("score");
 
-        //////////////////////////////////////////////////////////////////
-        /////////////////// SETUP DO NOT DELETE //////////////////////////
-        //////////////////////////////////////////////////////////////////
+        // Variable declarations
+        let positionX = 0;
+        let points = 0;
+        let speed = 10;
 
-        var box = jQuery(".box"); // reference to the HTML .box element
-        var board = jQuery(".board"); // reference to the HTML .board element
-        var boardWidth = board.width(); // the maximum X-Coordinate of the screen
-
-        // update the boardWidth variable when the window is resized
-        jQuery(window).on("resize", function () {
-          boardWidth = board.width();
-        });
-
-        // Every 50 milliseconds, call the update Function (see below)
-        setInterval(update, 50);
-
-        // Every time the box is clicked, call the handleBoxClick Function (see below)
-        box.on("click", handleBoxClick);
-
-        // moves the Box to a new position on the screen along the X-Axis
-        function moveBoxTo(newPositionX) {
-          box.css("left", newPositionX);
-        }
-
-        // changes the text displayed on the Box
-        function changeBoxText(newText) {
-          box.text(newText);
-        }
-
-        //////////////////////////////////////////////////////////////////
-        /////////////////// YOUR CODE BELOW HERE /////////////////////////
-        //////////////////////////////////////////////////////////////////
-
-        // TODO 2 - Variable declarations
-
-
-
-
-
-        /**
-         * This Function will be called 20 times/second.
-         * Each time it is called, it should move the Box to a new location.
-         * If the box drifts off the screen, turn it around!
-         */
+        // Move the box
         function update() {
-        moveBoxTo(200);
 
-        
-        
+            positionX += speed;
 
-          
+            const boardWidth = board.clientWidth;
+            const boxWidth = box.offsetWidth;
+
+            // Bounce off the right wall
+            if (positionX >= boardWidth - boxWidth) {
+                positionX = boardWidth - boxWidth;
+                speed *= -1;
+            }
+
+            // Bounce off the left wall
+            if (positionX <= 0) {
+                positionX = 0;
+                speed *= -1;
+            }
+
+            box.style.left = positionX + "px";
         }
 
-        /**
-         * This Function will be called each time the box is clicked.
-         * Each time it is called, it should perform each of the following actions:
-         * - increase the points total
-         * - increase the speed
-         * - move the box to the left side of the screen.
-         */
+        // Handle box clicks
         function handleBoxClick() {
 
+            points++;
 
+            // Reset box position
+            positionX = 0;
 
+            // Calculate speed using linear formula
+            speed = 3 * points + 10;
 
+            // Update box text
+            box.textContent = points;
+
+            // Update score display
+            scoreDisplay.textContent = "Score: " + points;
         }
 
+        // Restart game
+        function restartGame() {
+            positionX = 0;
+            points = 0;
+            speed = 10;
 
-        
-      })();
+            box.textContent = "0";
+            scoreDisplay.textContent = "Score: 0";
+            box.style.left = "0px";
+        }
+
+        // Listen for clicks
+        box.addEventListener("click", handleBoxClick);
+
+        // Run game animation
+        setInterval(update, 20);
+
     </script>
-  </body>
+
+</body>
 </html>
