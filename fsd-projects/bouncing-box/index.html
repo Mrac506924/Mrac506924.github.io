@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing Box Adventure</title>
+    <title>Bouncing Box</title>
 
     <style>
         body {
@@ -78,7 +78,7 @@
 
 <body>
 
-    <h1>🎮 Bouncing Box Adventure</h1>
+    <h1> Bouncing Box</h1>
 
     <p>Click the box to earn points and increase its speed!</p>
 
@@ -136,7 +136,7 @@
             // Reset box position
             positionX = 0;
 
-            // Calculate speed using linear formula
+            // speed
             speed = 3 * points + 10;
 
             // Update box text
@@ -157,10 +157,8 @@
             box.style.left = "0px";
         }
 
-        // Listen for clicks
         box.addEventListener("click", handleBoxClick);
 
-        // Run game animation
         setInterval(update, 20);
 
     </script>
